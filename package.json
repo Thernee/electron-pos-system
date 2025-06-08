@@ -1,10 +1,13 @@
 {
   "name": "electron-pos-system",
-  "module": "index.ts",
+  "module": "commonjs",
   "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
+  },
+  "scripts": {
+    "start": "bun run main.ts"
   },
   "peerDependencies": {
     "typescript": "^5"
