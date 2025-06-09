@@ -1,0 +1,13 @@
+packages:
+  - backend
+  - frontend
+  - electron
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - electron
+  - electron-winstaller
+  - esbuild
+  - prisma
+  - sqlite3

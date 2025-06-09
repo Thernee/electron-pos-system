@@ -2,10 +2,10 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": ".",
+    "module": "commonjs"
   },
   "include": [
-    "src/**/*.ts",
-    "prisma/schema.prisma"
+    "main.ts"
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "name": "electron",
+  "version": "0.1.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "pnpm run build && electron --enable-logging --no-sandbox .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^36",
+    "electron-builder": "^26",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@nestjs/core": "^11",
+    "@prisma/client": "^6"
+  }
+}
