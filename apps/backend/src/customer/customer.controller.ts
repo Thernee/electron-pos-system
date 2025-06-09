@@ -1,30 +1,38 @@
-import { Controller, Param, Post, Body, Get, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { ParseIntPipe } from '@nestjs/common';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Customer } from '@prisma/client';
 
 @Controller('customers')
 export class CustomerController {
-  constructor(private svc: CustomerService) { }
+  constructor(private service: CustomerService) { }
 
-  @Get() findAll() { return this.svc.findAll(); }
-
-  @Get(':id') findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.svc.findOne(id);
+  @Get()
+  getAll(): Promise<Customer[]> {
+    return this.service.findAll();
   }
 
-  @Post() create(@Body() dto: CreateCustomerDto) {
-    return this.svc.create(dto);
+  @Get(':id')
+  getOne(@Param('id', ParseIntPipe) id: number): Promise<Customer> {
+    return this.service.findOne(id);
   }
 
-  @Patch(':id') update(
+  @Post()
+  create(@Body() dto: CreateCustomerDto): Promise<Customer> {
+    return this.service.create(dto);
+  }
+
+  @Patch(':id')
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCustomerDto
-  ) {
-    return this.svc.update(id, dto);
+  ): Promise<Customer> {
+    return this.service.update(id, dto);
   }
 
-  @Delete(':id') remove(@Param('id', ParseIntPipe) id: number) {
-    return this.svc.remove(id);
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number): Promise<Customer> {
+    return this.service.remove(id);
   }
 }
-

@@ -10,14 +10,17 @@
   "dependencies": {
     "@nestjs/common": "^11",
     "@nestjs/core": "^11",
+    "@nestjs/mapped-types": "^2.1.0",
     "@prisma/client": "^6",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7"
   },
   "devDependencies": {
-    "prisma": "^6",
-    "typescript": "^5",
     "@nestjs/cli": "^11",
-    "@types/node": "^20"
+    "@types/node": "^20",
+    "prisma": "^6",
+    "typescript": "^5"
   }
 }

@@ -1,36 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Customer } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
   constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    return this.prisma.customer.findMany({
-      include: { transactions: true },
-    });
+  async findAll(): Promise<Customer[]> {
+    return this.prisma.customer.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.customer.findUniqueOrThrow({
+  async findOne(id: number): Promise<Customer> {
+    const customer = await this.prisma.customer.findUnique({
       where: { id },
       include: { transactions: true },
     });
+    if (!customer) throw new NotFoundException('Customer not found');
+    return customer;
   }
 
-  create(data: CreateCustomerDto) {
-    return this.prisma.customer.create({ data });
+  async create(dto: CreateCustomerDto): Promise<Customer> {
+    try {
+      return await this.prisma.customer.create({ data: dto });
+    } catch {
+      throw new BadRequestException('Failed to create customer');
+    }
   }
 
-  update(id: number, data: UpdateCustomerDto) {
-    return this.prisma.customer.update({
-      where: { id },
-      data,
-    });
+  async update(id: number, dto: UpdateCustomerDto): Promise<Customer> {
+    await this.findOne(id);
+    return this.prisma.customer.update({ where: { id }, data: dto });
   }
 
-  remove(id: number) {
+  async remove(id: number): Promise<Customer> {
+    await this.findOne(id);
     return this.prisma.customer.delete({ where: { id } });
   }
 }
-
