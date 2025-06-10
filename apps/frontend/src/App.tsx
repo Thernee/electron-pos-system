@@ -21,12 +21,9 @@ export default function App() {
           <Route path="/customers" element={<CustomerList />} />
           <Route path="/customers/add" element={<CustomerAdd />} />
           <Route path="/customers/:id/edit" element={<CustomerEdit />} />
-
           <Route path="/transactions" element={<TransactionList />} />
           <Route path="/transactions/add" element={<TransactionAdd />} />
-
           <Route path="/wallet" element={<CashWalletView />} />
-
           <Route path="/*" element={<CustomerList />} />
         </Routes>
       </div>
