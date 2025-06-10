@@ -1,30 +1,35 @@
-import React, { useState } from 'react';
-import CustomerView from './components/CustomerView';
-import TransactionView from './components/TransactionView';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import CustomerList from './pages/CustomerList';
+import CustomerAdd from './pages/CustomerAdd';
+import CustomerEdit from './pages/CustomerEdit';
+import TransactionList from './pages/TransactionList';
+import TransactionAdd from './pages/TransactionAdd';
 import CashWalletView from './components/CashWalletView';
 
 export default function App() {
-  const [tab, setTab] = useState<'customers' | 'transactions' | 'cashwallet'>('customers');
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">POS Management System</h1>
-      <nav className="mb-4">
-        {['customers', 'transactions', 'cashwallet'].map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t as any)}
-            className={`mr-2 px-3 py-1 rounded ${tab === t ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </nav>
-      <div>
-        {tab === 'customers' && <CustomerView />}
-        {tab === 'transactions' && <TransactionView />}
-        {tab === 'cashwallet' && <CashWalletView />}
+    <Router>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">POS Management System</h1>
+        <nav className="space-x-4 mb-6">
+          <NavLink to="/customers" className={({ isActive }) => isActive ? 'font-bold' : ''}>Customers</NavLink>
+          <NavLink to="/transactions" className={({ isActive }) => isActive ? 'font-bold' : ''}>Transactions</NavLink>
+          <NavLink to="/wallet" className={({ isActive }) => isActive ? 'font-bold' : ''}>Admin Wallet</NavLink>
+        </nav>
+        <Routes>
+          <Route path="/customers" element={<CustomerList />} />
+          <Route path="/customers/add" element={<CustomerAdd />} />
+          <Route path="/customers/:id/edit" element={<CustomerEdit />} />
+
+          <Route path="/transactions" element={<TransactionList />} />
+          <Route path="/transactions/add" element={<TransactionAdd />} />
+
+          <Route path="/wallet" element={<CashWalletView />} />
+
+          <Route path="/*" element={<CustomerList />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
