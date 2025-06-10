@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { TransactionType } from '@prisma/client';
 
 export class CreateTransactionDto {
@@ -12,6 +12,6 @@ export class CreateTransactionDto {
   amount!: number;
 
   @IsOptional()
-  @IsOptional()
+  @IsString()
   note?: string;
 }
