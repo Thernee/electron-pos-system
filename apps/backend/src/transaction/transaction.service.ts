@@ -7,6 +7,14 @@ import { TransactionType } from '@prisma/client';
 export class TransactionService {
   constructor(private prisma: PrismaService) { }
 
+  findAll(customerId?: number) {
+    const where = customerId ? { customerId } : {};
+    return this.prisma.transaction.findMany({
+      where,
+      include: { customer: true },
+    });
+  }
+
   async create(dto: CreateTransactionDto) {
     const { customerId, type, amount, note } = dto;
     if (amount <= 0) {
