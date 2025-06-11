@@ -35,7 +35,6 @@ model Transaction {
 }
 
 enum TransactionType {
-  ATM_DEDUCTION
   CASH_COLLECTION
 
   CASH_DEPOSIT
@@ -43,6 +42,8 @@ enum TransactionType {
   TRANSFER_IN
   TRANSFER_OUT
   CASH_WITHDRAWAL
+
+  DEBT_COLLECTION
 }
 
 model CashWallet {
