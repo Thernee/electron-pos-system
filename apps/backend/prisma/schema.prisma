@@ -14,10 +14,7 @@ model Customer {
   email      String? @unique
   phone      String?
 
-  // Balance fields
-  cashBalance   Float @default(0.0)
-  walletBalance Float @default(0.0)
-  debtBalance   Float @default(0.0)
+  cashBalance Float @default(0.0)
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -35,15 +32,10 @@ model Transaction {
 }
 
 enum TransactionType {
-  CASH_COLLECTION
-
-  CASH_DEPOSIT
-  ATM_DEPOSIT
-  TRANSFER_IN
-  TRANSFER_OUT
-  CASH_WITHDRAWAL
-
-  DEBT_COLLECTION
+  ADD_CASH // customer brings cash in
+  ADD_WALLET // customer transfers digital funds in
+  REMOVE_CASH // customer withdraws physical cash
+  REMOVE_WALLET // customer withdraws digital funds
 }
 
 model CashWallet {
