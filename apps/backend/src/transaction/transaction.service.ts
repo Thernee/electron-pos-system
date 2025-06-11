@@ -21,7 +21,7 @@ export class TransactionService {
     if (amount <= 0) throw new BadRequestException('Amount must be positive');
 
     return this.prisma.$transaction(async (tx) => {
-      // 1) Update Customer & CashWallet based on type
+      // Update Customer and CashWallet based on type
       switch (type) {
         case TransactionType.ADD_CASH:
           await tx.customer.update({
@@ -67,7 +67,7 @@ export class TransactionService {
           throw new BadRequestException('Unsupported transaction type');
       }
 
-      // 2) Create transaction record
+      // Create transaction record
       return tx.transaction.create({ data: { customerId, type, amount, note } });
     });
   }
