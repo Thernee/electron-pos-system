@@ -6,8 +6,6 @@ CREATE TABLE "Customer" (
     "email" TEXT,
     "phone" TEXT,
     "cashBalance" REAL NOT NULL DEFAULT 0.0,
-    "walletBalance" REAL NOT NULL DEFAULT 0.0,
-    "debtBalance" REAL NOT NULL DEFAULT 0.0,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
