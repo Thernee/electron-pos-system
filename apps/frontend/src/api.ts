@@ -127,3 +127,12 @@ export async function fetchTransactionsReport(from?: string, to?: string): Promi
   const res = await fetch(url);
   return res.json();
 }
+
+export async function deleteCustomer(id: number): Promise<void> {
+  const res = await fetch(`${API_BASE}/customers/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    throw new Error(`Delete failed: ${res.statusText}`);
+  }
+}
