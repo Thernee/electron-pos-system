@@ -11,9 +11,10 @@ import { CashWalletService } from './cash-wallet/cash-wallet.service';
 import { TransactionModule } from './transaction/transaction.module';
 import { CashWalletModule } from './cash-wallet/cash-wallet.module';
 import { CustomerModule } from './customer/customer.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
-  imports: [TransactionModule, CashWalletModule, CustomerModule],
+  imports: [TransactionModule, CashWalletModule, CustomerModule, ReportsModule],
   controllers: [AppController, CustomerController, TransactionController, CashWalletController],
   providers: [AppService, PrismaService, CustomerService, TransactionService, CashWalletService],
 })
