@@ -11,7 +11,7 @@ export type Customer = {
 };
 
 export enum TransactionType {
-  ATM_DEDUCTION = 'ATM_DEDUCTION',
+  DEBT_COLLECTION = 'DEBT_COLLECTION',
   CASH_COLLECTION = 'CASH_COLLECTION',
   CASH_DEPOSIT = 'CASH_DEPOSIT',
   ATM_DEPOSIT = 'ATM_DEPOSIT',
@@ -23,6 +23,7 @@ export enum TransactionType {
 export type Transaction = {
   id: number;
   customerId: number;
+  customer: { name: string }
   type: TransactionType;
   amount: number;
   timestamp: string;
@@ -35,6 +36,20 @@ export type CashWallet = {
   lastUpdated: string;
 };
 
+export type CreateCustomerPayload = {
+  name: string;
+  email?: string;
+  phone?: string;
+  cardNumber?: string;
+};
+
+export type CreateTransactionPayload = {
+  customerId: number;
+  type: TransactionType;
+  amount: number;
+  note?: string;
+};
+
 // Customer APIs
 export async function fetchCustomers(): Promise<Customer[]> {
   const res = await fetch(`${API_BASE}/customers`);
@@ -44,7 +59,7 @@ export async function fetchCustomerById(id: number): Promise<Customer> {
   const res = await fetch(`${API_BASE}/customers/${id}`);
   return res.json();
 }
-export async function createCustomer(data: Partial<Customer>): Promise<Customer> {
+export async function createCustomer(data: CreateCustomerPayload): Promise<Customer> {
   const res = await fetch(`${API_BASE}/customers`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -62,19 +77,20 @@ export async function updateCustomer(id: number, data: Partial<Customer>): Promi
 }
 
 // Transaction APIs
-export async function fetchTransactions(customerId?: number): Promise<Transaction[]> {
-  const url = customerId
-    ? `${API_BASE}/transactions?customerId=${customerId}`
-    : `${API_BASE}/transactions`;
-  const res = await fetch(url);
+export async function fetchTransactions(): Promise<Transaction[]> {
+  const res = await fetch(`${API_BASE}/transactions`);    // no need for includeCustomer query param
+  if (!res.ok) throw new Error(`Failed to load transactions: ${res.statusText}`);
   return res.json();
 }
-export async function createTransaction(data: Omit<Transaction, 'id' | 'timestamp'>): Promise<Transaction> {
+export async function createTransaction(
+  data: CreateTransactionPayload
+): Promise<Transaction> {
   const res = await fetch(`${API_BASE}/transactions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+  if (!res.ok) throw new Error(`Create failed: ${res.statusText}`);
   return res.json();
 }
 
@@ -89,5 +105,28 @@ export async function adjustCash(data: Partial<CashWallet>): Promise<CashWallet>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+  return res.json();
+}
+
+// Reports APIs
+export type CustomerBalance = { id: number; name: string; balance: number; debt: number };
+export type AdminSummary = { totalCustomer: number; adminCashOnHand: number; adminDigital: number };
+
+export async function fetchCustomerBalances(): Promise<CustomerBalance[]> {
+  const res = await fetch(`${API_BASE}/reports/customer-balances`);
+  return res.json();
+}
+
+export async function fetchAdminSummary(): Promise<AdminSummary> {
+  const res = await fetch(`${API_BASE}/reports/admin-summary`);
+  return res.json();
+}
+
+export async function fetchTransactionsReport(from?: string, to?: string): Promise<Transaction[]> {
+  const params = new URLSearchParams();
+  if (from) params.append('from', from);
+  if (to) params.append('to', to);
+  const url = `${API_BASE}/reports/transactions${params.toString() ? `?${params}` : ''}`;
+  const res = await fetch(url);
   return res.json();
 }
