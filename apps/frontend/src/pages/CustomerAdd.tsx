@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { createCustomer } from '../api';
+import { createCustomer, CreateCustomerPayload } from '../api';
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerAdd() {
   const nav = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState<CreateCustomerPayload>({ name: '', email: '', phone: '' });
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

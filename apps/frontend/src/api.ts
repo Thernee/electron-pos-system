@@ -62,6 +62,7 @@ export async function createCustomer(data: CreateCustomerPayload): Promise<Custo
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+  if (!res.ok) throw new Error(`Create failed: ${res.statusText}`);
   return res.json();
 }
 export async function updateCustomer(id: number, data: Partial<Customer>): Promise<Customer> {
