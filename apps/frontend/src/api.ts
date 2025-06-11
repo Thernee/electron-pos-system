@@ -11,13 +11,10 @@ export type Customer = {
 };
 
 export enum TransactionType {
-  DEBT_COLLECTION = 'DEBT_COLLECTION',
-  CASH_COLLECTION = 'CASH_COLLECTION',
-  CASH_DEPOSIT = 'CASH_DEPOSIT',
-  ATM_DEPOSIT = 'ATM_DEPOSIT',
-  TRANSFER_IN = 'TRANSFER_IN',
-  TRANSFER_OUT = 'TRANSFER_OUT',
-  CASH_WITHDRAWAL = 'CASH_WITHDRAWAL'
+  ADD_CASH = 'ADD_CASH',
+  ADD_WALLET = 'ADD_WALLET',
+  REMOVE_CASH = 'REMOVE_CASH',
+  REMOVE_WALLET = 'REMOVE_WALLET',
 }
 
 export type Transaction = {
@@ -78,7 +75,7 @@ export async function updateCustomer(id: number, data: Partial<Customer>): Promi
 
 // Transaction APIs
 export async function fetchTransactions(): Promise<Transaction[]> {
-  const res = await fetch(`${API_BASE}/transactions`);    // no need for includeCustomer query param
+  const res = await fetch(`${API_BASE}/transactions`);
   if (!res.ok) throw new Error(`Failed to load transactions: ${res.statusText}`);
   return res.json();
 }
