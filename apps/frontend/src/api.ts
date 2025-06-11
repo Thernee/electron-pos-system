@@ -106,7 +106,7 @@ export async function adjustCash(data: Partial<CashWallet>): Promise<CashWallet>
 }
 
 // Reports APIs
-export type CustomerBalance = { id: number; name: string; balance: number; debt: number };
+export type CustomerBalance = { id: number; name: string; balance: number };
 export type AdminSummary = { totalCustomer: number; adminCashOnHand: number; adminDigital: number };
 
 export async function fetchCustomerBalances(): Promise<CustomerBalance[]> {
