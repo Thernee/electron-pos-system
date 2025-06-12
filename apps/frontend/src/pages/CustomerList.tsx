@@ -36,13 +36,11 @@ export default function CustomerList() {
             <div key={c.id} className="card">
               <h3 className="text-lg font-semibold mb-2">{c.name}</h3>
               <p>
-                Cash:{' '}
+                Balance:{' '}
                 <span className={pos ? 'text-gray-800' : 'text-red-600'}>
                   ₦{c.cashBalance.toFixed(2)}
                 </span>
               </p>
-              <p>Wallet: ₦{c.cashBalance.toFixed(2)}</p>
-              <p>Debt: ₦{c.debtBalance.toFixed(2)}</p>
               <Link
                 to={`/customers/${c.id}/edit`}
                 className="inline-block mt-4 text-blue-600 hover:underline"
