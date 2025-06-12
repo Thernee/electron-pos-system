@@ -56,13 +56,17 @@ export async function fetchCustomerById(id: number): Promise<Customer> {
   const res = await fetch(`${API_BASE}/customers/${id}`);
   return res.json();
 }
-export async function createCustomer(data: CreateCustomerPayload): Promise<Customer> {
+export async function createCustomer(
+  data: CreateCustomerPayload
+): Promise<Customer> {
   const res = await fetch(`${API_BASE}/customers`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error(`Create failed: ${res.statusText}`);
+  if (!res.ok) {
+    throw new Error(`Create failed: ${res.statusText}`);
+  }
   return res.json();
 }
 export async function updateCustomer(id: number, data: Partial<Customer>): Promise<Customer> {
@@ -75,9 +79,19 @@ export async function updateCustomer(id: number, data: Partial<Customer>): Promi
 }
 
 // Transaction APIs
-export async function fetchTransactions(): Promise<Transaction[]> {
-  const res = await fetch(`${API_BASE}/transactions`);
-  if (!res.ok) throw new Error(`Failed to load transactions: ${res.statusText}`);
+export async function fetchTransactions(
+  customerId?: number,
+  type?: TransactionType,
+  from?: string,
+  to?: string
+): Promise<Transaction[]> {
+  const params = new URLSearchParams();
+  if (customerId) params.append('customerId', String(customerId));
+  if (type) params.append('type', type);
+  if (from) params.append('from', from);
+  if (to) params.append('to', to);
+  const res = await fetch(`${API_BASE}/transactions?${params.toString()}`);
+  if (!res.ok) throw new Error(res.statusText);
   return res.json();
 }
 export async function createTransaction(

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
-import { fetchCustomerBalances, fetchAdminSummary, CustomerBalance, AdminSummary } from '../api';
+import { fetchCustomerBalances, fetchAdminSummary, CustomerBalance, AdminSummary, fetchTransactionsReport } from '../api';
+import BalanceChart from '../components/BalanceChart';
+
 
 export default function Dashboard() {
-  const [cust, setCust] = useState<CustomerBalance[]>([]);
+  const [cust, setCust,] = useState<CustomerBalance[]>([]);
   const [admin, setAdmin] = useState<AdminSummary | null>(null);
+  const [txCount, setTxCount] = useState(0);
+  const [totalVolume, setTotalVolume] = useState(0);
 
   useEffect(() => {
     fetchAdminSummary().then(setAdmin);
     fetchCustomerBalances().then(setCust);
+    fetchTransactionsReport().then(txs => {
+      setTxCount(txs.length);
+      setTotalVolume(txs.reduce((sum, t) => sum + t.amount, 0));
+    });
   }, []);
 
   function saveAsPDF() {
@@ -56,10 +64,19 @@ export default function Dashboard() {
           <h3 className="font-semibold mb-2">Admin Digital</h3>
           <p className="text-2xl">₦{admin?.adminDigital.toFixed(2)}</p>
         </div>
+        <div className="card text-center">
+          <h3 className="font-semibold"># Transactions</h3>
+          <p className="text-2xl">{txCount}</p>
+        </div>
+        <div className="card text-center">
+          <h3 className="font-semibold">Total Volume</h3>
+          <p className="text-2xl">₦{totalVolume.toFixed(2)}</p>
+        </div>
       </div>
 
       <div>
         <h3 className="text-xl font-semibold mb-4">Customer Balances</h3>
+        <BalanceChart data={cust} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cust.map(c => {
             const isNeg = c.balance < 0;

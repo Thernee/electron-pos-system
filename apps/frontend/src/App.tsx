@@ -24,6 +24,7 @@ export default function App() {
 
           <Route path="wallet" element={<CashWalletView />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Dashboard />} />
         </Route>
       </Routes>
     </Router>
