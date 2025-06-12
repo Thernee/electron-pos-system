@@ -2,6 +2,17 @@
   "name": "electron",
   "version": "0.1.0",
   "main": "dist/main.js",
+  "build": {
+    "appId": "com.thernee.pos",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "../frontend/dist/**/*",
+      "../backend/dist/**/*"
+    ]
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "pnpm run build && electron --enable-logging --no-sandbox .",
