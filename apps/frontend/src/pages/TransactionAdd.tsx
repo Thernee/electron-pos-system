@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCustomers, createTransaction, TransactionType, Customer } from '../api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function TransactionAdd() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -47,6 +47,7 @@ export default function TransactionAdd() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <Link to="/transactions" className="text-blue-600 hover:underline mb-4 block">⇚ Back to Transactions</Link>
       <h1 className="text-2xl font-bold mb-4">New Transaction</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={onSubmit}>

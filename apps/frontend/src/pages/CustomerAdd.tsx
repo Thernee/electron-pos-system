@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createCustomer, CreateCustomerPayload } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function CustomerAdd() {
   const nav = useNavigate();
@@ -45,6 +46,7 @@ export default function CustomerAdd() {
 
   return (
     <div className="card max-w-md mx-auto">
+      <Link to="/customers" className="text-blue-600 hover:underline mb-4 block">⇚  Back to Customers</Link>
       <h2 className="text-xl font-semibold mb-4">Add Customer</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={onSubmit} className="space-y-4">

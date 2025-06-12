@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCustomerById, updateCustomer, deleteCustomer, Customer } from '../api';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 export default function CustomerEdit() {
   const { id } = useParams();
@@ -27,6 +27,7 @@ export default function CustomerEdit() {
 
   return (
     <div className="card max-w-md mx-auto space-y-4">
+      <Link to="/customers" className="text-blue-600 hover:underline mb-4 block">⇚  Back to Customers</Link>
       <h2 className="text-xl font-semibold">Edit Customer</h2>
       <form onSubmit={onSubmit} className="space-y-4">
         <input
