@@ -11,7 +11,10 @@
     "build": "pnpm -r run build",
     "dev": "concurrently -k \"pnpm --filter backend start:dev\" \"pnpm --filter frontend dev\" \"pnpm --filter electron start\"",
     "start": "pnpm --filter electron start",
-    "dist": "pnpm build && pnpm --filter electron dist"
+    "build:backend": "pnpm --filter backend build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:electron": "pnpm --filter electron build",
+    "dist": "pnpm build:backend && pnpm build:frontend && pnpm build:electron"
   },
   "devDependencies": {
     "wait-on": "^8.0.3",
