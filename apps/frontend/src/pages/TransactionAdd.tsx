@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 export default function TransactionAdd() {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [form, setForm] = useState<{ customerId: string; type: TransactionType; amount: string }>({
+  const [form, setForm] = useState<{ customerId: string; type: TransactionType; amount: string; note: string }>({
     customerId: '',
     type: TransactionType.ADD_CASH,
     amount: '',
+    note: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +33,7 @@ export default function TransactionAdd() {
         customerId: Number(form.customerId),
         type: form.type,
         amount: Number(form.amount),
+        note: form.note.trim() || undefined,
       });
       nav('/transactions');
     } catch (err) {
@@ -75,6 +77,12 @@ export default function TransactionAdd() {
           placeholder="Amount"
           value={form.amount}
           onChange={e => setForm({ ...form, amount: e.target.value })}
+          className="border p-2 w-full rounded-md mb-4"
+        />
+        <textarea
+          placeholder="Note (optional)"
+          value={form.note}
+          onChange={e => setForm({ ...form, note: e.target.value })}
           className="border p-2 w-full rounded-md mb-4"
         />
         <button
