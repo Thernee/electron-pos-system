@@ -1,14 +1,25 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { TransactionType } from '@prisma/client';
+import { TransactionType, Transaction } from '@prisma/client';
 
 @Injectable()
 export class TransactionService {
   constructor(private prisma: PrismaService) { }
 
-  findAll(customerId?: number) {
-    const where = customerId ? { customerId } : {};
+  async findAll(
+    customerId?: number,
+    type?: TransactionType,
+    from?: Date,
+    to?: Date
+  ): Promise<Transaction[]> {
+    const where: any = {};
+    if (customerId) where.customerId = customerId;
+    if (type) where.type = type;
+    if (from || to) where.timestamp = {};
+    if (from) where.timestamp.gte = from;
+    if (to) where.timestamp.lte = to;
+
     return this.prisma.transaction.findMany({
       where,
       include: { customer: true },
