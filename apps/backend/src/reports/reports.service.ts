@@ -23,22 +23,25 @@ export class ReportsService {
 
   // Admin summary: sum of all customer balances + admin wallet cash & digital
   async adminSummary() {
-    const sumBalances = await this.prisma.customer.aggregate({
-      _sum: { cashBalance: true, },
+    // ensure the singleton row exists
+    const wallet = await this.prisma.cashWallet.upsert({
+      where: { id: 1 },
+      update: {}, // nothing to update
+      create: { cashOnHand: 0, digitalWallet: 0 },
     });
 
-    const wallet = await this.prisma.cashWallet.findUnique({ where: { id: 1 } });
-    if (!wallet) {
-      throw new Error('CashWallet not found');
-    }
-    const totalCustomer =
-      (sumBalances._sum.cashBalance || 0);
+    const sum = await this.prisma.customer.aggregate({
+      _sum: { cashBalance: true },
+    });
+    const totalCustomer = sum._sum.cashBalance ?? 0;
+
     return {
       totalCustomer,
       adminCashOnHand: wallet.cashOnHand,
       adminDigital: wallet.digitalWallet,
     };
   }
+
 
   // Transactions list with optional date filter
   async transactionsReport(from?: string, to?: string) {
