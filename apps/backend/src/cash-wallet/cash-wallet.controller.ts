@@ -1,7 +1,7 @@
 import { Controller, Get, Patch, Body } from '@nestjs/common';
 import { CashWalletService } from './cash-wallet.service';
 import { AdjustCashDto } from './dto/adjust-cash.dto';
-import { CashWallet } from '@prisma/client';
+import { CashWallet } from '../storage/storage.service';
 
 @Controller('cash-wallet')
 export class CashWalletController {
