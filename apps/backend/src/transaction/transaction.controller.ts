@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Query, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Query, Body } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { Transaction } from '@prisma/client';
-import { TransactionType } from '@prisma/client';
+import { Transaction } from '../storage/storage.service';
+import { TransactionType } from '../storage/storage.service';
 
 @Controller('transactions')
 export class TransactionController {
@@ -24,5 +24,16 @@ export class TransactionController {
   @Post()
   create(@Body() dto: CreateTransactionDto): Promise<Transaction> {
     return this.service.create(dto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    const txId = Number(id);
+    await this.service.delete(txId);
+  }
+
+  @Delete()
+  async clearAll(): Promise<void> {
+    await this.service.clearAll();
   }
 }

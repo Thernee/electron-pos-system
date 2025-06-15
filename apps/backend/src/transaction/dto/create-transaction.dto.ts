@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { TransactionType } from '@prisma/client';
+import { TransactionType } from '../../storage/storage.service';
 
 export class CreateTransactionDto {
   @IsNumber()
