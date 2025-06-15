@@ -2,29 +2,64 @@
   "name": "electron",
   "version": "0.1.0",
   "main": "dist/main.js",
+  "description": "Electron POS System for managing customer transactions",
+  "author": "Sani Abubakar Adam <Athernee@gmail.com>",
+  "homepage": "https://github.com/thernee/electron-pos-system",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "pnpm run build && electron --enable-logging --no-sandbox .",
+    "dist": "electron-builder --win --linux --publish=never"
+  },
   "build": {
     "appId": "com.thernee.pos",
     "directories": {
       "output": "release"
     },
     "files": [
-      "dist/**/*",
-      "../frontend/dist/**/*",
-      "../backend/dist/**/*"
-    ]
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "pnpm run build && electron --enable-logging --no-sandbox .",
-    "dist": "electron-builder"
+      "package.json",
+      "dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend/dist",
+        "to": "frontend",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../backend/dist-bundle",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png",
+      "maintainer": "Sani Abubakar Adam <Athernee@gmail.com>",
+      "category": "Utility",
+      "asarUnpack": [
+        "backend/**"
+      ]
+    }
   },
   "devDependencies": {
-    "electron": "^36",
-    "electron-builder": "^26",
+    "electron": "^36.4.0",
+    "electron-builder": "^26.0.12",
     "typescript": "^5"
   },
   "dependencies": {
-    "@nestjs/core": "^11",
-    "@prisma/client": "^6"
+    "@nestjs/core": "^11"
   }
 }

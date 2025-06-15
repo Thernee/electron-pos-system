@@ -6,6 +6,6 @@
     "module": "commonjs"
   },
   "include": [
-    "src/main.ts"
+    "main.ts"
   ]
 }
