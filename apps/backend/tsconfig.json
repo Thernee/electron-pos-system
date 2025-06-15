@@ -4,8 +4,13 @@
     "outDir": "dist",
     "rootDir": "src",
     "module": "commonjs",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ],
     "declaration": true,
-    "emitDeclarationOnly": false
+    "emitDeclarationOnly": false,
+    "esModuleInterop": true,
   },
   "include": [
     "src/**/*.ts",

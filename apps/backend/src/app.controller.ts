@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { StorageService, Customer } from './storage/storage.service';
 
 @Controller('customers')
 export class AppController {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly storage: StorageService) { }
 
   @Get()
-  getCustomers() {
-    return this.prisma.customer.findMany();
+  getCustomers(): Customer[] {
+    // simply return the array from our JSON store
+    return this.storage.getCustomers();
   }
 }
