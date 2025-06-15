@@ -2,7 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Param, Body, ParseIntPipe } from 
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { Customer } from '@prisma/client';
+import { Customer } from '../storage/storage.service';
 
 @Controller('customers')
 export class CustomerController {
