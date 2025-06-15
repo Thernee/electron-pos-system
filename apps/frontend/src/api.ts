@@ -20,7 +20,7 @@ export enum TransactionType {
 export type Transaction = {
   id: number;
   customerId: number;
-  customer: { name: string }
+  // customer: { name: string }
   type: TransactionType;
   amount: number;
   timestamp: string;
@@ -145,6 +145,30 @@ export async function fetchTransactionsReport(from?: string, to?: string): Promi
 
 export async function deleteCustomer(id: number): Promise<void> {
   const res = await fetch(`${API_BASE}/customers/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    try {
+      const errorData = await res.json();
+      throw new Error(errorData.message || `Delete failed: ${res.statusText}`);
+    } catch (e) {
+      throw new Error(`Delete failed: ${res.statusText}`);
+    }
+  }
+}
+
+export async function deleteTransaction(id: number): Promise<void> {
+  const res = await fetch(`${API_BASE}/transactions/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || `Delete failed: ${res.statusText}`);
+  }
+}
+
+export async function clearAllTransactions(): Promise<void> {
+  const res = await fetch(`${API_BASE}/transactions`, {
     method: 'DELETE',
   });
   if (!res.ok) {
