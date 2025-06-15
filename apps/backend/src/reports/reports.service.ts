@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { StorageService, Transaction, CashWallet } from '../storage/storage.service';
 
 @Injectable()
 export class ReportsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private storage: StorageService) { }
 
-  // Customer balance
-  async customerBalances() {
-    const customers = await this.prisma.customer.findMany({
-      select: {
-        id: true,
-        name: true,
-        cashBalance: true,
-      },
-    });
+  /** Customer balances: id, name, cashBalance */
+  async customerBalances(): Promise<{ id: number; name: string; balance: number }[]> {
+    const customers = this.storage.getCustomers();
     return customers.map(c => ({
       id: c.id,
       name: c.name,
@@ -21,19 +15,16 @@ export class ReportsService {
     }));
   }
 
-  // Admin summary: sum of all customer balances + admin wallet cash & digital
-  async adminSummary() {
-    // ensure the singleton row exists
-    const wallet = await this.prisma.cashWallet.upsert({
-      where: { id: 1 },
-      update: {}, // nothing to update
-      create: { cashOnHand: 0, digitalWallet: 0 },
-    });
+  /** Admin summary: total of customer cash + cashOnHand + digitalWallet */
+  async adminSummary(): Promise<{
+    totalCustomer: number;
+    adminCashOnHand: number;
+    adminDigital: number;
+  }> {
+    const customers = this.storage.getCustomers();
+    const wallet = this.storage.getCashWallet();
 
-    const sum = await this.prisma.customer.aggregate({
-      _sum: { cashBalance: true },
-    });
-    const totalCustomer = sum._sum.cashBalance ?? 0;
+    const totalCustomer = customers.reduce((sum, c) => sum + c.cashBalance, 0);
 
     return {
       totalCustomer,
@@ -42,20 +33,29 @@ export class ReportsService {
     };
   }
 
+  /** Transactions report filtered by optional ISO date strings */
+  async transactionsReport(from?: string, to?: string): Promise<
+    (Transaction & { customerName: string })[]
+  > {
+    let txs = this.storage.getTransactions();
+    const customersById = Object.fromEntries(
+      this.storage.getCustomers().map(c => [c.id, c.name]),
+    );
 
-  // Transactions list with optional date filter
-  async transactionsReport(from?: string, to?: string) {
-    const where: any = {};
-    if (from || to) where.timestamp = {};
-    if (from) where.timestamp.gte = new Date(from);
-    if (to) where.timestamp.lte = new Date(to);
+    if (from) {
+      const d1 = new Date(from);
+      txs = txs.filter(t => new Date(t.timestamp) >= d1);
+    }
+    if (to) {
+      const d2 = new Date(to);
+      txs = txs.filter(t => new Date(t.timestamp) <= d2);
+    }
 
-    return this.prisma.transaction.findMany({
-      where,
-      orderBy: { timestamp: 'desc' },
-      include: {
-        customer: { select: { name: true } },
-      },
-    });
+    return txs
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+      .map(t => ({
+        ...t,
+        customerName: customersById[t.customerId] || 'Unknown',
+      }));
   }
 }
