@@ -20,8 +20,13 @@ export default function CustomerEdit() {
   async function onDelete() {
     if (!id) return;
     if (confirm('Are you sure you want to delete this customer?')) {
-      await deleteCustomer(+id);
-      nav('/customers');
+      try {
+        await deleteCustomer(+id);
+        nav('/customers');
+      } catch (err) {
+        console.error('Failed to delete customer:', err);
+        alert(err.message || 'Failed to delete customer');
+      }
     }
   }
 
